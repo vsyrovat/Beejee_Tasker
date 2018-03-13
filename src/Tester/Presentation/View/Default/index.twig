@@ -1,3 +1,7 @@
 {% extends 'layout.twig' %}
 
-{% block body %}Body of the page{% endblock %}
+{% block body %}
+    <p>Task list:</p>
+
+    <p><a href="{{ url('task.add') }}">Add Task</a></p>
+{% endblock %}

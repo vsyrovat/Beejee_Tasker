@@ -8,10 +8,10 @@ use Framework\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController
+class TaskController
 {
-    public static function indexAction(Request $request, Application $app)
+    public static function addAction(Request $request, Application $app)
     {
-        return $app->render('Default/index.twig');
+        return $app->render('Task/add.twig');
     }
 }
