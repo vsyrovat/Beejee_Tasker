@@ -4,6 +4,7 @@ namespace Framework;
 
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -84,6 +85,11 @@ class Application implements HttpKernelInterface
     public function map($path, $controller, $name)
     {
         $this->routes->add($name, new Route($path, ['controller' => $controller]));
+    }
+
+    public function redirect($url, $status = 302)
+    {
+        return new RedirectResponse($url, $status);
     }
 
     /**

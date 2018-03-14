@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{% block title %}Tester{% endblock %}</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
 </head>
 <body>
-<p><a href="{{ url('/') }}">Home</a></p>
-{% block body %}{% endblock %}
+<div class="container">
+    <p><a href="{{ url('/') }}">Home</a></p>
+    <h1>{% block h1 %}Tasker{% endblock %}</h1>
+    {% block body %}Tasker{% endblock %}
+</div>
+
+<script type="text/javascript" src="/assets/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
