@@ -1,6 +1,6 @@
 <?php
 
-namespace Tester\Domain;
+namespace Tasker\Domain;
 
 class Task
 {

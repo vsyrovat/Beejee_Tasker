@@ -1,5 +1,5 @@
 <?php
 
-$app->map('/', \Tester\Presentation\Controller\DefaultController::class.'::indexAction', '/');
+$app->map('/', \Tasker\Presentation\Controller\DefaultController::class.'::indexAction', '/');
 
-$app->map('/task/add', \Tester\Presentation\Controller\TaskController::class.'::addAction', 'task.add');
+$app->map('/task/add', \Tasker\Presentation\Controller\TaskController::class.'::addAction', 'task.add');
