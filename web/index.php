@@ -8,12 +8,14 @@ require_once __DIR__ . '/../app/bootstrap.php';
 
 $app = new \Framework\Application();
 
-$twig = new Twig_Environment(
-    new Twig_Loader_Filesystem(__DIR__.'/../src/Tester/Presentation/View'),
-    ['cache' => DEBUG ? false : TWIG_CACHE_DIR]
-);
-$twig->addFunction(new \Framework\Twig\Functions\Url($app->getUrlGenerator()));
+$twig = (new \Framework\TwigFactory($app->getUrlGenerator()))
+    ->createTwig([APP_ROOT.'/src/Tester/Presentation/View'], TWIG_CACHE_DIR, DEBUG);
 $app->registerTwig($twig);
+
+$formFactory = (new \Framework\FormFactoryFactory($app))
+    ->createFormFactory($twig);
+$app->registerFormFactory($formFactory);
+
 
 require __DIR__ . '/../app/routes.php';
 

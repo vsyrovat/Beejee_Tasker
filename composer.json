@@ -3,6 +3,11 @@
         "symfony/http-foundation": "^3.4",
         "symfony/http-kernel": "^3.4",
         "symfony/routing": "^3.4",
-        "twig/twig": "^2.4"
+        "twig/twig": "^2.4",
+        "symfony/form": "^3.4",
+        "symfony/security-csrf": "^3.4",
+        "symfony/twig-bridge": "^3.4",
+        "symfony/translation": "^3.4",
+        "symfony/config": "^3.4"
     }
 }

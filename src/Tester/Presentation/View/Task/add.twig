@@ -1,1 +1,10 @@
+{#{% form_theme from 'bootstrap_4_horizontal_layout.html.twig' %}#}
+
 {% extends 'layout.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit">
+    {{ form_end(form) }}
+{% endblock %}

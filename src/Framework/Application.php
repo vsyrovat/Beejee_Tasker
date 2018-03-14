@@ -2,8 +2,11 @@
 
 namespace Framework;
 
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -17,16 +20,24 @@ class Application implements HttpKernelInterface
     protected $routes;
     protected $twig;
     protected $urlGenerator;
+    protected $formFactory;
+    protected $session;
 
     public function __construct()
     {
         $this->routes = new RouteCollection();
         $this->urlGenerator = new UrlGenerator($this->routes, new RequestContext());
+        $this->session = new Session();
     }
 
     public function registerTwig(\Twig_Environment $twig)
     {
         $this->twig = $twig;
+    }
+
+    public function registerFormFactory(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
     }
 
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
@@ -88,11 +99,21 @@ class Application implements HttpKernelInterface
         return $this->twig->render($template, $data);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUrlGenerator()
+    public function getUrlGenerator(): UrlGenerator
     {
         return $this->urlGenerator;
+    }
+
+    public function getFormFactory(): FormFactory
+    {
+        return $this->formFactory;
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession(): Session
+    {
+        return $this->session;
     }
 }
