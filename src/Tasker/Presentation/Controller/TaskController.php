@@ -24,6 +24,8 @@ class TaskController
         if ($form->isValid()) {
             $data = $form->getData();
 
+            $app['app.use_case.create_task']->run($data['userName'], $data['email'], $data['text'], $data['image']);
+
             return $app->redirect($app->getUrlGenerator()->generate('task.list'));
         }
 
