@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use Pimple\Container;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class Application implements HttpKernelInterface
+class Application extends Container implements HttpKernelInterface
 {
     protected $routes;
     protected $twig;
@@ -24,8 +25,10 @@ class Application implements HttpKernelInterface
     protected $formFactory;
     protected $session;
 
-    public function __construct()
+    public function __construct(array $values = [])
     {
+        parent::__construct([]);
+
         $this->routes = new RouteCollection();
         $this->urlGenerator = new UrlGenerator($this->routes, new RequestContext());
         $this->session = new Session();
