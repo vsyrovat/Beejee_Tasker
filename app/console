@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/bootstrap.php';
+
+$app->register(new \Framework\Console\ConsoleServiceProvider(), [
+    'console.name' => 'Tasker',
+    'console.version' => '1.0.0',
+    'console.project_directory' => APP_ROOT,
+]);
+
+$app['console']->add(new \Tasker\Command\HelloCommand());
+
+$app['console']->run();
