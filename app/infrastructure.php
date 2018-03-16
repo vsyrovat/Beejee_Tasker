@@ -1,10 +1,7 @@
 <?php
 
 $app['app.infrastructure.pdo'] = function($app) {
-    if (!is_dir(dirname(APP_PDO_SQLITE_FILE))) {
-        mkdir(dirname(APP_PDO_SQLITE_FILE));
-    }
-    return new \PDO('sqlite:'.APP_PDO_SQLITE_FILE);
+    return new \PDO(APP_DB_PDO_DSN, APP_DB_USER, APP_DB_PASSWORD);
 };
 
 $app['app.infrastructure.task_repository'] = function($app) {

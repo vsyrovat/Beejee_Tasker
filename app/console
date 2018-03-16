@@ -11,4 +11,15 @@ $app->register(new \Framework\Console\ConsoleServiceProvider(), [
 
 $app['console']->add(new \Tasker\Command\HelloCommand());
 
+$migrator = new \Framework\Migrations\Migrator(
+    $app['app.infrastructure.pdo'],
+    new \Framework\Migrations\Drivers\Mysql(),
+    APP_ROOT.'/src/Tasker/Infrastructure/Migrations',
+    '\\Tasker\\Infrastructure\\Migrations'
+);
+
+$app['console']->add(new \Framework\Migrations\Commands\DBInit(null, $migrator));
+$app['console']->add(new \Framework\Migrations\Commands\DBCreateMigration(null, $migrator));
+$app['console']->add(new \Framework\Migrations\Commands\DBMigrate(null, $migrator));
+
 $app['console']->run();
