@@ -1,5 +1,9 @@
 <?php
 
 $app['app.use_case.create_task'] = function($app) {
-    return new \Tasker\Application\Task\CreateTaskUseCase($app);
+    return new \Tasker\Application\Task\CreateTaskUseCase($app['app.infrastructure.task_repository']);
+};
+
+$app['app.use_case.fetch_tasks'] = function($app) {
+    return new \Tasker\Application\Task\FetchTasksUseCase($app['app.infrastructure.task_repository']);
 };

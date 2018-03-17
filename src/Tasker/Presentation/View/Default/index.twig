@@ -4,28 +4,17 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-sm">
-            <p>User1</p>
-            <p>user1@example.com</p>
-            <p>Стартовая страница - список задач с возможностью сортировки по имени пользователя, email и статусу. Вывод задач нужно сделать страницами по 3 штуки (с пагинацией). Видеть список задач и создавать новые может любой посетитель без регистрации. </p>
-            <p><img src="/img/1.jpg" alt="" style="max-width: 320px"></p>
-        </div>
-        <div class="col-sm">
-            <p>User1</p>
-            <p>user1@example.com</p>
-            <p>Стартовая страница - список задач с возможностью сортировки по имени пользователя, email и статусу. Вывод задач нужно сделать страницами по 3 штуки (с пагинацией). Видеть список задач и создавать новые может любой посетитель без регистрации. </p>
-            <p><img src="/img/1.jpg" alt="" style="max-width: 320px;"></p>
-        </div>
-        <div class="col-sm">
-            <p>User1</p>
-            <p>user1@example.com</p>
-            <p>Стартовая страница - список задач с возможностью сортировки по имени пользователя, email и статусу. Вывод задач нужно сделать страницами по 3 штуки (с пагинацией). Видеть список задач и создавать новые может любой посетитель без регистрации. </p>
-            <p><img src="/img/1.jpg" alt="" style="max-width: 320px;"></p>
-        </div>
+        {% for task in tasks %}
+            <section>
+            <div class="col-sm">
+                <p>{{ task.userName }}</p>
+                <p>{{ task.email }}</p>
+                <p>{{ task.text }}</p>
+                <p>{{ task.image }}</p>
+            </div>
+            </section>
+        {% endfor %}
     </div>
-    <section>
-
-    </section>
 
     <p><a href="{{ url('task.add') }}">Add Task</a></p>
 {% endblock %}

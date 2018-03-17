@@ -4,6 +4,7 @@ namespace Tasker\Domain;
 
 class Task
 {
+    private $id;
     private $createdAt;
     private $userName;
     private $email;
@@ -18,6 +19,14 @@ class Task
         $this->email = $email;
         $this->text = $text;
         $this->image = $image;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
