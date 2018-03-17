@@ -26,7 +26,7 @@ class TaskController
 
             $app['app.use_case.create_task']->run($data['userName'], $data['email'], $data['text'], $data['image']);
 
-            return $app->redirect($app->getUrlGenerator()->generate('task.list'));
+            return $app->redirect($app->getUrlGenerator()->generate('/'));
         }
 
         return $app->render('Task/add.twig', [

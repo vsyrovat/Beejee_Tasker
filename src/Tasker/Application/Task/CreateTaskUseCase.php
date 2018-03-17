@@ -7,19 +7,31 @@ use Tasker\Domain\TaskRepositoryInterface;
 
 class CreateTaskUseCase
 {
+    private $pdo;
     private $taskRepository;
 
-    public function __construct(TaskRepositoryInterface $taskRepository)
+    public function __construct(\PDO $pdo, TaskRepositoryInterface $taskRepository)
     {
+        $this->pdo = $pdo;
         $this->taskRepository = $taskRepository;
     }
 
     public function run($userName, $email, $text, $image): Task
     {
-        $task = new Task($userName, $email, $text, $image);
+        $this->pdo->beginTransaction();
 
-        $this->taskRepository->add($task);
+        try {
+            $task = new Task($userName, $email, $text, $image);
 
-        return $task;
+            $this->taskRepository->add($task);
+
+            $this->pdo->commit();
+
+            return $task;
+        } catch (\PDOException $e) {
+            $this->pdo->rollBack();
+
+            throw $e;
+        }
     }
 }

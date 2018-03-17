@@ -16,9 +16,26 @@ class TaskRepository implements TaskRepositoryInterface
 
     public function add(Task $task): Task
     {
-        // TODO: Implement add() method.
+        $statement = $this->pdo->prepare("INSERT INTO `tasks` 
+(`created_at`, `username`, `email`, `text`, `image`) 
+VALUES 
+(:createdAt, :userName, :email, :text, :image)");
+        $statement->execute([
+            'createdAt' => $task->getCreatedAt()->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s'),
+            'userName' => $task->getUserName(),
+            'email' => $task->getEmail(),
+            'text' => $task->getText(),
+            'image' => $task->getImage(),
+        ]);
 
-        return new Task(null, null, null, null);
+        $insertId = $this->pdo->lastInsertId();
+
+        $returnTask = clone $task;
+        $rpId = new \ReflectionProperty(get_class($returnTask), 'id');
+        $rpId->setAccessible(true);
+        $rpId->setValue($returnTask, intval($insertId));
+
+        return $returnTask;
     }
 
     /**

@@ -1,7 +1,10 @@
 <?php
 
 $app['app.use_case.create_task'] = function($app) {
-    return new \Tasker\Application\Task\CreateTaskUseCase($app['app.infrastructure.task_repository']);
+    return new \Tasker\Application\Task\CreateTaskUseCase(
+        $app['app.infrastructure.pdo'],
+        $app['app.infrastructure.task_repository']
+    );
 };
 
 $app['app.use_case.fetch_tasks'] = function($app) {
