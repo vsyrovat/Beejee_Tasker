@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tasker\Application\Task;
 
 use Tasker\Domain\TaskRepositoryInterface;
@@ -13,8 +15,8 @@ class FetchTasksUseCase
         $this->taskRepository = $taskRepository;
     }
 
-    public function run()
+    public function run(int $limit = null, int $offset = null): array
     {
-        return $this->taskRepository->list();
+        return $this->taskRepository->list($limit, $offset);
     }
 }

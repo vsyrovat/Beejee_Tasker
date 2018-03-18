@@ -12,7 +12,7 @@ class DefaultController
 {
     public static function indexAction(Request $request, Application $app)
     {
-        $tasks = $app['app.infrastructure.task_repository']->list();
+        $tasks = $app['app.use_case.fetch_tasks']->run(3, 0);
 
         return $app->render('Default/index.twig', [
             'tasks' => $tasks,

@@ -3,6 +3,7 @@
 $app['app.infrastructure.pdo'] = function($app) {
     $pdo = new \PDO(APP_DB_PDO_DSN, APP_DB_USER, APP_DB_PASSWORD);
     $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, [\Framework\PDO\PDOStatement::class, []]);
     return $pdo;
 };
 

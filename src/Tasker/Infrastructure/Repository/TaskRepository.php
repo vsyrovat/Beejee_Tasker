@@ -2,6 +2,7 @@
 
 namespace Tasker\Infrastructure\Repository;
 
+use Framework\PDO\Helpers\QueryBuilder;
 use Tasker\Domain\Task;
 use Tasker\Domain\TaskRepositoryInterface;
 
@@ -39,17 +40,23 @@ VALUES
     }
 
     /**
-     * @return Task[]
+     * {@inheritdoc}
      */
-    public function list(): array
+    public function list(int $limit = null, int $offset = null): array
     {
-        $statement = $this->pdo->prepare("SELECT * FROM `tasks`");
-        $statement->execute();
+        $queryBuilder = new QueryBuilder("SELECT * FROM `tasks` {{LIMIT}}");
+        $queryBuilder->prepareLimit('{{LIMIT}}', $limit, $offset);
+
+        /* @var $statement \Framework\PDO\PDOStatement */
+        $statement = $this->pdo->prepare($queryBuilder->getQuery());
+        $statement->bindParamTypes($queryBuilder->getParamTypes());
+        $statement->execute($queryBuilder->getParams());
 
         $result = [];
         while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
             $result[] = $this->reconstitute($row);
         }
+
         return $result;
     }
 
