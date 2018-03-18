@@ -5,4 +5,4 @@ define('APP_DB_PORT', 3306);
 define('APP_DB_NAME', 'beejee');
 define('APP_DB_USER', 'root');
 define('APP_DB_PASSWORD', '');
-define('APP_DB_PDO_DSN', "mysql:host=".APP_DB_HOST.";port=".APP_DB_PORT.";dbname=".APP_DB_NAME);
+define('APP_DB_PDO_DSN', "mysql:host=".APP_DB_HOST.";port=".APP_DB_PORT.";dbname=".APP_DB_NAME.';charset=utf8');

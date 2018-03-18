@@ -17,6 +17,7 @@ CREATE TABLE `tasks` (
   `image` VARCHAR(255),
   PRIMARY KEY (`id`)
 )
+COLLATE='utf8_general_ci'
 SQL
         );
     }
