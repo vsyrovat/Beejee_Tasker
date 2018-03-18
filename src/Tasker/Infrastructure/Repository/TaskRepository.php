@@ -53,6 +53,24 @@ VALUES
         return $result;
     }
 
+    public function updateTask(Task $task): void
+    {
+        $statement = $this->pdo->prepare("UPDATE `tasks`
+SET
+  `username`=:username,
+  `email`=:email,
+  `text`=:text,
+  `image`=:image
+WHERE `id`=:id");
+        $statement->execute([
+            'username' => $task->getUserName(),
+            'email' => $task->getEmail(),
+            'text' => $task->getText(),
+            'image' => $task->getImage(),
+            'id' => $task->getId(),
+        ]);
+    }
+
     protected function reconstitute(array $data): Task
     {
         $task = new Task($data['username'], $data['email'], $data['text'], $data['image']);

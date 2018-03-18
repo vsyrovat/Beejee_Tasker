@@ -10,7 +10,9 @@
                 <p>{{ task.userName }}</p>
                 <p>{{ task.email }}</p>
                 <p>{{ task.text }}</p>
-                <p>{{ task.image }}</p>
+                {% if task.image %}
+                    <p><img src="/img/{{ task.id }}/{{ task.image }}" alt=""></p>
+                {% endif %}
             </div>
             </section>
         {% endfor %}

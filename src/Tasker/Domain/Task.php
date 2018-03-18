@@ -12,7 +12,7 @@ class Task
     private $image;
     private $done = false;
 
-    public function __construct($userName, $email, $text, $image)
+    public function __construct(string $userName, string $email, string $text, string $image = null)
     {
         $this->createdAt = new \DateTimeImmutable;
         $this->userName = $userName;
@@ -67,6 +67,14 @@ class Task
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage(string $image): void
+    {
+        $this->image = $image;
     }
 
     /**

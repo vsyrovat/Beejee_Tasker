@@ -10,4 +10,6 @@ interface TaskRepositoryInterface
      * @return Task[]
      */
     public function list(): array;
+
+    public function updateTask(Task $task): void;
 }

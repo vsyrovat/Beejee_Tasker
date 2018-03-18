@@ -21,7 +21,7 @@ class TaskController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $app['app.use_case.create_task']->run($data['userName'], $data['email'], $data['text'], $data['image']);

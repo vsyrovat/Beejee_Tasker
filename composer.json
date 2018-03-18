@@ -10,6 +10,7 @@
         "symfony/translation": "^3.4",
         "symfony/config": "^3.4",
         "pimple/pimple": "^3.2",
-        "symfony/console": "^3.4"
+        "symfony/console": "^3.4",
+        "claviska/simpleimage": "^3.3"
     }
 }
