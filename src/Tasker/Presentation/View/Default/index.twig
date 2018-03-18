@@ -5,16 +5,16 @@
 {% block body %}
     <div class="row">
         {% for task in tasks %}
-            <section style="outline: 1px solid silver">
-            <div class="col-sm">
+            <div class="col-12 col-lg-4">
+                <section>
                 <p>{{ task.userName }}</p>
                 <p>{{ task.email }}</p>
                 <p>{{ task.text }}</p>
                 {% if task.image %}
-                    <p><img src="/img/{{ task.id }}/{{ task.image }}" alt=""></p>
+                    <p><img src="/img/{{ task.id }}/{{ task.image }}" alt="" class="img-fluid"></p>
                 {% endif %}
+                </section>
             </div>
-            </section>
         {% endfor %}
     </div>
 
