@@ -5,6 +5,9 @@
 {% block body %}
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <input type="submit">
+        <div style="padding-top: 1em;">
+            <a href="{{ url('/') }}" style="float: left;">Cancel</a>
+            <input type="submit" style="float: right;" value="Add task">
+        </div>
     {{ form_end(form) }}
 {% endblock %}
