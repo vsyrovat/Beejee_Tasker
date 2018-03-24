@@ -15,5 +15,7 @@ interface TaskRepositoryInterface
      */
     public function list(int $limit = null, int $offset = null): array;
 
+    public function count(): int;
+
     public function updateTask(Task $task): void;
 }

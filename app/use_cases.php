@@ -10,3 +10,7 @@ $app['app.use_case.create_task'] = function($app) {
 $app['app.use_case.fetch_tasks'] = function($app) {
     return new \Tasker\Application\Task\FetchTasksUseCase($app['app.infrastructure.task_repository']);
 };
+
+$app['app.use_case.count_tasks'] = function($app) {
+    return new \Tasker\Application\Task\CountTasksUseCase($app['app.infrastructure.task_repository']);
+};

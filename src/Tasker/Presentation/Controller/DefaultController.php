@@ -5,17 +5,25 @@ declare(strict_types=1);
 namespace Tasker\Presentation\Controller;
 
 use Framework\Application;
+use Framework\Pagination\Pager;
+use Framework\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController
 {
     public static function indexAction(Request $request, Application $app)
     {
-        $tasks = $app['app.use_case.fetch_tasks']->run(3, 0);
+        $pager = new Pager($request, 'page', APP_PAGE_SIZE);
 
-        return $app->render('Default/index.twig', [
+        $tasks = $app['app.use_case.fetch_tasks']->run($pager->getLimit(), $pager->getOffset());
+
+        $totalTasks = $app['app.use_case.count_tasks']->run();
+
+        $paginator = new Paginator($pager, count($tasks), $totalTasks);
+
+        return $app['twig']->render('Default/index.twig', [
             'tasks' => $tasks,
+            'paginator' => $paginator,
         ]);
     }
 }

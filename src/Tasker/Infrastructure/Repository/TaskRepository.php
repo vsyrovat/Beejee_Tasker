@@ -60,6 +60,13 @@ VALUES
         return $result;
     }
 
+    public function count(): int
+    {
+        $statement = $this->pdo->query("SELECT COUNT(*) FROM `tasks`");
+        $statement->execute();
+        return $statement->fetch()[0];
+    }
+
     public function updateTask(Task $task): void
     {
         $statement = $this->pdo->prepare("UPDATE `tasks`

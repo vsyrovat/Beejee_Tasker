@@ -12,7 +12,7 @@ class TaskController
 {
     public static function addAction(Request $request, Application $app)
     {
-        $form = $app->getFormFactory()->createBuilder(FormType\FormType::class)
+        $form = $app['form.factory']->createBuilder(FormType\FormType::class)
             ->add('userName', FormType\TextType::class, ['required' => true])
             ->add('email', FormType\EmailType::class, ['required' => true])
             ->add('text', FormType\TextareaType::class, ['required' => true])
@@ -26,10 +26,10 @@ class TaskController
 
             $app['app.use_case.create_task']->run($data['userName'], $data['email'], $data['text'], $data['image']);
 
-            return $app->redirect($app->getUrlGenerator()->generate('/'));
+            return $app->redirect($app['url_generator']->generate('/'));
         }
 
-        return $app->render('Task/add.twig', [
+        return $app['twig']->render('Task/add.twig', [
             'form' => $form->createView(),
         ]);
     }

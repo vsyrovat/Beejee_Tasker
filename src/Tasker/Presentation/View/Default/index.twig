@@ -19,4 +19,8 @@
     </div>
 
     <p><a href="{{ url('task.add') }}">Add Task</a></p>
+
+    <div class="text-right">
+        {% include '@Pagination/paginator.twig' with {paginator: paginator} %}
+    </div>
 {% endblock %}

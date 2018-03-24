@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Framework;
 
 use Pimple\Container;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,29 +20,28 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Application extends Container implements HttpKernelInterface
 {
-    protected $routes;
-    protected $twig;
-    protected $urlGenerator;
-    protected $formFactory;
-    protected $session;
-
     public function __construct(array $values = [])
     {
-        parent::__construct([]);
+        parent::__construct();
 
-        $this->routes = new RouteCollection();
-        $this->urlGenerator = new UrlGenerator($this->routes, new RequestContext());
-        $this->session = new Session();
-    }
+        $this['debug'] = false;
+        $this['charset'] = 'UTF-8';
 
-    public function registerTwig(\Twig_Environment $twig)
-    {
-        $this->twig = $twig;
-    }
+        $this['routes'] = function ($app) {
+            return new RouteCollection();
+        };
 
-    public function registerFormFactory(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
+        $this['url_generator'] = function ($app) {
+            return new UrlGenerator($app['routes'], new RequestContext());
+        };
+
+        $this['session'] = function ($app) {
+            return new Session();
+        };
+
+        foreach ($values as $key => $value) {
+            $this[$key] = $value;
+        }
     }
 
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
@@ -49,9 +49,9 @@ class Application extends Container implements HttpKernelInterface
         $context = new RequestContext();
         $context->fromRequest($request);
 
-        $matcher = new UrlMatcher($this->routes, $context);
+        $matcher = new UrlMatcher($this['routes'], $context);
 
-        $this->urlGenerator->setContext($context);
+        $this['url_generator']->setContext($context);
 
         try {
             $attributes = $matcher->match($request->getPathInfo());
@@ -87,42 +87,11 @@ class Application extends Container implements HttpKernelInterface
 
     public function map($path, $controller, $name)
     {
-        $this->routes->add($name, new Route($path, ['controller' => $controller]));
+        $this['routes']->add($name, new Route($path, ['controller' => $controller]));
     }
 
     public function redirect($url, $status = 302)
     {
         return new RedirectResponse($url, $status);
-    }
-
-    /**
-     * @param string $template
-     * @param array $data
-     * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function render($template, $data = [])
-    {
-        return $this->twig->render($template, $data);
-    }
-
-    public function getUrlGenerator(): UrlGenerator
-    {
-        return $this->urlGenerator;
-    }
-
-    public function getFormFactory(): FormFactory
-    {
-        return $this->formFactory;
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession(): Session
-    {
-        return $this->session;
     }
 }

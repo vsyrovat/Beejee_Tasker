@@ -7,13 +7,21 @@ $app = new \Framework\Application();
 
 $app['debug'] = defined('DEBUG') && DEBUG;
 
-$twig = (new \Framework\TwigFactory($app->getUrlGenerator()))
-    ->createTwig([APP_ROOT.'/src/Tasker/Presentation/View'], TWIG_CACHE_DIR, $app['debug']);
-$app->registerTwig($twig);
+$app['locale'] = 'en';
 
-$formFactory = (new \Framework\FormFactoryFactory($app))
-    ->createFormFactory($twig);
-$app->registerFormFactory($formFactory);
+$app->register(new \Framework\Twig\TwigServiceProvider(), [
+    'twig.path' => APP_ROOT.'/src/Tasker/Presentation/View',
+    'twig.options' => [
+        'cache' => TWIG_CACHE_DIR,
+    ],
+]);
+
+$app->register(new \Framework\Translator\TranslatorServiceProvider());
+
+$app->register(new \Framework\Form\FormServiceProvider());
+
+$app->register(new \Framework\Pagination\PaginationServiceProvider());
+
 
 require_once 'routes.php';
 require_once 'use_cases.php';
