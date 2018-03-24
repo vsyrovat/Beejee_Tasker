@@ -14,7 +14,8 @@
     {% block body %}Tasker{% endblock %}
 </div>
 
-<script type="text/javascript" src="/assets/jquery/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ file_with_mtime('/assets/jquery/jquery-3.3.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ file_with_mtime('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>

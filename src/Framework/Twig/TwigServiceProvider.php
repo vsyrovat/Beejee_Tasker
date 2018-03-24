@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Twig;
 
+use Framework\Twig\Functions\FileWithMtime;
 use Framework\Twig\Functions\Url;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -29,6 +30,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             }
 
             $twig->addFunction(new Url($app['url_generator']));
+
+            $twig->addFunction(new FileWithMtime());
 
             return $twig;
         };
