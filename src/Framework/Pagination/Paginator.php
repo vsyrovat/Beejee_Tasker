@@ -36,7 +36,7 @@ class Paginator
     {
         $this->pager = $pager;
         $this->pageId = $pager->getPageNum();
-        $this->totalPages = ceil($itemsCountTotal / $pager->getPageSize());
+        $this->totalPages = intval(ceil($itemsCountTotal / $pager->getPageSize()));
         $this->itemsCount = $itemsCount;
         $this->itemsCountTotal = $itemsCountTotal;
 
