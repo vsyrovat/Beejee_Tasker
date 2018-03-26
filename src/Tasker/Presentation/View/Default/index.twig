@@ -3,6 +3,10 @@
 {% block h1 %}List of the tasks{% endblock %}
 
 {% block body %}
+    <div class="text-right">
+        {% include '@Pagination/paginator.twig' with {paginator: paginator} %}
+    </div>
+
     <div class="row">
         {% for task in tasks %}
             <div class="col-12 col-lg-4">
@@ -20,8 +24,4 @@
     </div>
 
     <p><a href="{{ url('task.add') }}">Add Task</a></p>
-
-    <div class="text-right">
-        {% include '@Pagination/paginator.twig' with {paginator: paginator} %}
-    </div>
 {% endblock %}
