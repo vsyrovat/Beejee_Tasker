@@ -44,7 +44,7 @@ VALUES
      */
     public function list(int $limit = null, int $offset = null): array
     {
-        $queryBuilder = new QueryBuilder("SELECT * FROM `tasks` {{LIMIT}}");
+        $queryBuilder = new QueryBuilder("SELECT * FROM `tasks` ORDER BY `id` DESC {{LIMIT}}");
         $queryBuilder->prepareLimit('{{LIMIT}}', $limit, $offset);
 
         /* @var $statement \Framework\PDO\PDOStatement */
