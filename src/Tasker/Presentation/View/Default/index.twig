@@ -7,12 +7,13 @@
         {% for task in tasks %}
             <div class="col-12 col-lg-4">
                 <section>
-                <p>{{ task.userName }}</p>
-                <p>{{ task.email }}</p>
-                <p>{{ task.text }}</p>
-                {% if task.image %}
-                    <p><img src="/img/{{ task.id }}/{{ task.image }}" alt="" class="img-fluid"></p>
-                {% endif %}
+                    <h5>Task №{{ task.id }}</h5>
+                    <p>{{ task.userName }}</p>
+                    <p>{{ task.email }}</p>
+                    <p>{{ task.text }}</p>
+                    {% if task.image %}
+                        <p><img src="/img/{{ task.id }}/{{ task.image }}" alt="" class="img-fluid"></p>
+                    {% endif %}
                 </section>
             </div>
         {% endfor %}
