@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use Framework\PHP\UploadMaxDetector;
 use Pimple\Container;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +38,12 @@ class Application extends Container implements HttpKernelInterface
         $this['session'] = function ($app) {
             return new Session();
         };
+
+        $this['upload_max_size'] = min(
+            UploadMaxDetector::bytesExtract(ini_get('upload_max_filesize')),
+            UploadMaxDetector::bytesExtract(ini_get('post_max_size')),
+            UploadMaxDetector::bytesExtract(ini_get('memory_limit'))
+        );
 
         foreach ($values as $key => $value) {
             $this[$key] = $value;

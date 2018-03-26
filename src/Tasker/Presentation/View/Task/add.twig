@@ -3,11 +3,126 @@
 {% block h1 %}Add new task{% endblock %}
 
 {% block body %}
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <div style="padding-top: 1em;">
-            <a href="{{ url('/') }}" style="float: left;">Cancel</a>
-            <input type="submit" style="float: right;" value="Add task">
+    <style>
+        @import url("{{ file_with_mtime('/assets/css/Task/preview.css') }}");
+    </style>
+
+    <noscript>
+        <div class="alert alert-danger">Enable javascript!</div>
+    </noscript>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="js-form-box">
+                {{ form_start(form, {
+                    attr: {
+                        class: 'js-form',
+                        'data-preview-action': url('task.preview'),
+                        'data-submit-error-msg': 'Error occured during form submission'
+                    }}
+                )}}
+                    {{ form_widget(form) }}
+                <p>Upload max size: {{ upload_max_filesize }}</p>
+                    <a type="button" class="btn btn-secondary" role="button" href="{{ url('/') }}">Cancel</a>
+                    <span class="float-right">
+                        <button type="submit" class="btn btn-secondary js-task-preview">Preview</button>
+                        <button type="submit" class="btn btn-primary js-task-submit">Add Task</button>
+                    </span>
+                {{ form_end(form) }}
+            </div>
+
+            <div class="js-form-result d-none">
+                <div class="js-form-result-text alert alert-success"></div>
+                <div class="js-form-result-links">
+                    <p>Go to <a href="{{ url('/') }}">task list</a></p>
+                    <p><a href="{{ url('task.add') }}">Add another one</a></p>
+                </div>
+            </div>
         </div>
-    {{ form_end(form) }}
+    </div>
+
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="js-preview-content"></div>
+        <div style="text-align: center;">
+            <button class="modal-close btn btn-primary">Close</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ file_with_mtime('/assets/jquery/jquery.form/jquery.form.min.js') }}"></script>
+
+    <script type="text/javascript">
+        'use strict';
+
+        var successMessage = 'Task was successfully added';
+
+        $('.js-form').data('orig-action', $('.js-form').attr('action'));
+
+        // Submit
+        $('.js-task-submit').click(function(){
+            var f = $(this).closest('form');
+            f.attr('action', f.data('orig-action'));
+            f.off('submit').on('submit', function(e){
+                e.preventDefault();
+                $(this).ajaxSubmit({
+                    dataType: 'json',
+                    success: function(data){
+                        if (data && data.success) {
+                            $('.js-form-box').slideUp();
+                            $('.js-form-result-text').text(successMessage);
+                            $('.js-form-result').removeClass('d-none').slideDown();
+                        } else {
+                            if (data.errmessage) {
+                                alert(data.errmessage);
+                            } else {
+                                alert(f.data('submit-error-msg'));
+                            }
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert(f.data('submit-error-msg'));
+                    },
+                    complete: function(){}
+                });
+            });
+        });
+
+        // Preview
+        $('.js-task-preview').click(function(){
+            var f = $(this).closest('form');
+            f.attr('action', f.data('preview-action'));
+            f.off('submit').on('submit', function(e){
+                e.preventDefault();
+                $(this).ajaxSubmit({
+                    dataType: 'json',
+                    success: function(data){
+                        if (data && data.success) {
+                            $('.js-preview-content').html(data.result);
+                            $(".modal-content,.modal-background").toggleClass("active");
+                        } else {
+                            if (data.errmessage) {
+                                alert(data.errmessage);
+                            } else {
+                                alert(f.data('submit-error-msg'));
+                            }
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert(f.data('submit-error-msg'));
+                    },
+                    complete: function(){}
+                });
+            });
+        });
+
+        $(function(){
+            $(".modal-background,.modal-close").click(function () {
+                $(".modal-content,.modal-background").toggleClass("active");
+            });
+        });
+
+    </script>
+    <script type="text/javascript" src="{{ file_with_mtime('/assets/js/Task/add.js') }}"></script>
 {% endblock %}
