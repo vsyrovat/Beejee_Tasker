@@ -9,8 +9,6 @@ $app->register(new \Framework\Console\ConsoleServiceProvider(), [
     'console.project_directory' => APP_ROOT,
 ]);
 
-$app['console']->add(new \Tasker\Command\HelloCommand());
-
 $migrator = new \Framework\Migrations\Migrator(
     $app['app.infrastructure.pdo'],
     new \Framework\Migrations\Drivers\Mysql(),
