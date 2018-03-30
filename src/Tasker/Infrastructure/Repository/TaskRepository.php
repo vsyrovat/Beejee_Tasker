@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tasker\Infrastructure\Repository;
 
 use Framework\PDO\Helpers\QueryBuilder;
 use Tasker\Domain\Task;
+use Tasker\Domain\TaskNotFoundException;
 use Tasker\Domain\TaskRepositoryInterface;
 
 class TaskRepository implements TaskRepositoryInterface
@@ -64,7 +67,7 @@ VALUES
     {
         $statement = $this->pdo->query("SELECT COUNT(*) FROM `tasks`");
         $statement->execute();
-        return $statement->fetch()[0];
+        return intval($statement->fetch()[0]);
     }
 
     public function updateTask(Task $task): void
@@ -74,20 +77,36 @@ SET
   `username`=:username,
   `email`=:email,
   `text`=:text,
-  `image`=:image
+  `image`=:image,
+  `is_done`=:isDone
 WHERE `id`=:id");
         $statement->execute([
             'username' => $task->getUserName(),
             'email' => $task->getEmail(),
             'text' => $task->getText(),
             'image' => $task->getImage(),
+            'isDone' => $task->isDone() ? 1 : 0,
             'id' => $task->getId(),
         ]);
     }
 
+    public function findById(int $id): Task
+    {
+        $statement = $this->pdo->prepare("SELECT * FROM `tasks` WHERE `id`=:id");
+        $statement->execute(['id' => $id]);
+
+        if ($statement->rowCount() == 0) {
+            throw new TaskNotFoundException('id='.$id);
+        }
+
+        $data = $statement->fetch(\PDO::FETCH_ASSOC);
+
+        return $this->reconstitute($data);
+    }
+
     protected function reconstitute(array $data): Task
     {
-        $task = new Task($data['username'], $data['email'], $data['text'], $data['image']);
+        $task = new Task($data['username'], $data['email'], $data['text'], $data['image'], $data['is_done'] == '1');
 
         $rpId = new \ReflectionProperty(get_class($task), 'id');
         $rpId->setAccessible(true);

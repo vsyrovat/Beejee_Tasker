@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tasker\Domain;
 
 class Task
@@ -12,13 +14,14 @@ class Task
     private $image;
     private $done = false;
 
-    public function __construct(string $userName, string $email, string $text, string $image = null)
+    public function __construct(string $userName, string $email, string $text, string $image = null, bool $done = false)
     {
         $this->createdAt = new \DateTimeImmutable;
         $this->userName = $userName;
         $this->email = $email;
         $this->text = $text;
         $this->image = $image;
+        $this->done = $done;
     }
 
     /**
@@ -54,6 +57,14 @@ class Task
     }
 
     /**
+     * @param string $text
+     */
+    public function setText(string $text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
      * @return mixed
      */
     public function getText()
@@ -75,6 +86,14 @@ class Task
     public function setImage(string $image): void
     {
         $this->image = $image;
+    }
+
+    /**
+     * @param bool $done
+     */
+    public function setDone(bool $done): void
+    {
+        $this->done = $done;
     }
 
     /**

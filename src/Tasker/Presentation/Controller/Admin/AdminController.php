@@ -8,6 +8,8 @@ use Framework\Application;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Tasker\Domain\TaskNotFoundException;
 
 class AdminController
 {
@@ -53,5 +55,48 @@ class AdminController
         $app['session']->remove('user');
         $app['session']->getFlashBag()->add('success', 'You logged out');
         return new RedirectResponse($app['url_generator']->generate('/'));
+    }
+
+    public static function editTaskAction(Request $request, Application $app)
+    {
+        if (!$app['user']->isGrant('ADMIN')) {
+            return new RedirectResponse($app['url_generator']->generate('admin.login'));
+        }
+
+        $id = intval($request->get('id'));
+
+        try {
+            $task = $app['app.use_case.fetch_task']->run($id);
+        } catch (TaskNotFoundException $e) {
+            return new Response('Task not found', response::HTTP_NOT_FOUND);
+        }
+
+        $form = $app['form.factory']->createBuilder(FormType\FormType::class, [
+            'text' => $task->getText(),
+            'done' => $task->isDone(),
+        ])
+            ->add('text', FormType\TextareaType::class)
+            ->add('done', FormType\CheckboxType::class, ['required' => false])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $task->setText($data['text']);
+            $task->setDone($data['done']);
+
+            $app['app.use_case.update_task']->run($task);
+
+            $app['session']->getFlashBag()->add('success', 'Task '.$task->getId().' was successfully updated');
+
+            return new RedirectResponse($app['url_generator']->generate('/'));
+        }
+
+        return $app['twig']->render('Admin/edit_task.twig', [
+            'task' => $task,
+            'form' => $form->createView(),
+        ]);
     }
 }

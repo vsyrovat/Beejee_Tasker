@@ -12,3 +12,5 @@ $app->map('/admin/', \Tasker\Presentation\Controller\Admin\AdminController::clas
 $app->map('/admin/login', \Tasker\Presentation\Controller\Admin\AdminController::class.'::loginAction', 'admin.login');
 
 $app->map('/admin/logout', \Tasker\Presentation\Controller\Admin\AdminController::class.'::logoutAction', 'admin.logout');
+
+$app->map('/admin/task/edit/', \Tasker\Presentation\Controller\Admin\AdminController::class.'::editTaskAction', 'admin.task.edit');

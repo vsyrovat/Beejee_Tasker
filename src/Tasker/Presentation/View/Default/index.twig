@@ -18,6 +18,9 @@
                     {% if task.image %}
                         <p><img src="/img/{{ task.id }}/{{ task.image }}" alt="" class="img-fluid"></p>
                     {% endif %}
+                    <p>{{ task.done ? 'Task done' : 'Task not done' }}</p>
+
+                    <a href="{{ url('admin.task.edit', {id: task.id}) }}">Edit task</a>
                 </section>
             </div>
         {% endfor %}

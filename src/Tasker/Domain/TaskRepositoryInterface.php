@@ -18,4 +18,11 @@ interface TaskRepositoryInterface
     public function count(): int;
 
     public function updateTask(Task $task): void;
+
+    /**
+     * @param int $id
+     * @return Task
+     * @throws TaskNotFoundException
+     */
+    public function findById(int $id): Task;
 }
