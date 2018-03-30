@@ -9,7 +9,34 @@
 </head>
 <body>
 <div class="container">
-    <p><a href="{{ url('/') }}">Home</a></p>
+    <div class="row">
+        <div class="col-6">
+            <p>
+                <a href="{{ url('/') }}">Home</a>
+            </p>
+        </div>
+
+        <div class="col-6 pull-right text-right">
+            <p>{% if app.user.logged %}
+                    <img src="/assets/img/user.png" alt=""> {{ app.user.username }} <a href="{{ url('admin.logout') }}">logout</a>
+                {% else %}
+                    <a href="{{ url('admin.login') }}">Login</a>
+                {% endif %}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="flash">
+                {% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for idx, flashMessage in flashMessages %}
+                        <div class="alert alert-{{ type }}">{{ flashMessage|trans|trim }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
     <h1>{% block h1 %}Tasker{% endblock %}</h1>
     {% block body %}Tasker{% endblock %}
 </div>

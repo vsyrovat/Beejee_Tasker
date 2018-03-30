@@ -32,22 +32,32 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $app['twig']->addExtension(new TranslationExtension($app['translator']));
 
+        $app['twig']->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+            FormRenderer::class => function() use ($app) {
+                return new FormRenderer($app['form.engine'], $app['csrf.token_manager']);
+            }
+        ]));
+
+        $app['form.engine'] = function ($app) {
+            return new TwigRendererEngine(['bootstrap_4_layout.html.twig'], $app['twig']);
+        };
+
+        $app['csrf.token_generator'] = function ($app) {
+            return new UriSafeTokenGenerator();
+        };
+
+        $app['csrf.token_storage'] = function ($app) {
+            return new SessionTokenStorage($app['session']);
+        };
+
+        $app['csrf.token_manager'] = function ($app) {
+            return new CsrfTokenManager($app['csrf.token_generator'], $app['csrf.token_storage']);
+        };
+
         $app['form.factory'] = function ($app) {
-            $csrfGenerator = new UriSafeTokenGenerator();
-            $csrfStorage = new SessionTokenStorage($app['session']);
-            $csrfManager = new CsrfTokenManager($csrfGenerator, $csrfStorage);
-
-            $formEngine = new TwigRendererEngine(['bootstrap_4_layout.html.twig'], $app['twig']);
-
-            $app['twig']->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
-                FormRenderer::class => function() use ($formEngine, $csrfManager) {
-                    return new FormRenderer($formEngine, $csrfManager);
-                }
-            ]));
-
             return Forms::createFormFactoryBuilder()
                 ->addExtension(new HttpFoundationExtension())
-                ->addExtension(new CsrfExtension($csrfManager))
+                ->addExtension(new CsrfExtension($app['csrf.token_manager']))
                 ->getFormFactory();
         };
     }

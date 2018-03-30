@@ -5,3 +5,5 @@ define('APP_DOCUMENT_ROOT', APP_ROOT.'/web');
 define('APP_CACHE_DIR', APP_ROOT.'/tmp/cache');
 define('TWIG_CACHE_DIR', APP_CACHE_DIR.'/twig');
 define('APP_IMG_DIR', APP_DOCUMENT_ROOT.'/img');
+
+define('APP_ADMIN_PASSWORD_STORAGE_FILE', __DIR__ . '/../credentials/admin_password');

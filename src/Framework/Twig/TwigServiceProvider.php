@@ -33,6 +33,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
             $twig->addFunction(new FileWithMtime());
 
+            $twig->addGlobal('app', $app);
+
             return $twig;
         };
 

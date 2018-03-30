@@ -22,6 +22,12 @@ $app->register(new \Framework\Form\FormServiceProvider());
 
 $app->register(new \Framework\Pagination\PaginationServiceProvider());
 
+$app->register(new \Framework\Security\SecurityServiceProvider(), [
+    'auth.users' => [
+        'admin' => [['ADMIN'], @file_get_contents(APP_ADMIN_PASSWORD_STORAGE_FILE)]
+    ],
+]);
+
 
 require_once 'routes.php';
 require_once 'use_cases.php';
