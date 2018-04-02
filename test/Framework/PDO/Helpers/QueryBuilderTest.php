@@ -7,6 +7,8 @@ use Framework\PDO\Helpers\Condition\GreaterOrEqual;
 use Framework\PDO\Helpers\Condition\InSubquery;
 use Framework\PDO\Helpers\Condition\LessOrEqual;
 use Framework\PDO\Helpers\Condition\OrCondition;
+use Framework\PDO\Helpers\Order\OrderByChain;
+use Framework\PDO\Helpers\Order\OrderBy;
 
 /**
  * @backupGlobals disabled
@@ -89,5 +91,25 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
             $queryBuilder->getQuery()
         );
         self::assertEquals(['color' => 'red', 'color1' => 'black'], $queryBuilder->getParams());
+    }
+
+    public function testOrderBy()
+    {
+        $queryBuilder = new QueryBuilder('SELECT * FROM table {{ORDERBY}}');
+        $queryBuilder->prepareOrderBy('{{ORDERBY}}', new OrderBy('foo', 'desc'));
+        self::assertEquals('SELECT * FROM table ORDER BY `foo` DESC', $queryBuilder->getQuery());
+
+        $queryBuilder = new QueryBuilder('SELECT * FROM `table` {{ORDERBY}}');
+        $queryBuilder->prepareOrderBy('{{ORDERBY}}',
+            new OrderByChain(
+                new OrderBy('field1', 'asc'),
+                new OrderBy('field2', 'desc')
+            )
+        );
+        self::assertEquals('SELECT * FROM `table` ORDER BY `field1` ASC, `field2` DESC', $queryBuilder->getQuery());
+
+        $queryBuilder = new QueryBuilder('SELECT * FROM `table` {{ORDERBY}}');
+        $queryBuilder->prepareOrderBy('{{ORDERBY}}', new OrderBy(null));
+        self::assertEquals('SELECT * FROM `table` ', $queryBuilder->getQuery());
     }
 }

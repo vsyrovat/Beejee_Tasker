@@ -1,8 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Framework\PDO\Helpers;
 
 use Framework\PDO\Helpers\Condition\BaseCondition;
 use Framework\PDO\Helpers\Condition\DuplicateBindNameException;
+use Framework\PDO\Helpers\Order\BaseOrderBy;
 
 class QueryBuilder
 {
@@ -12,6 +16,8 @@ class QueryBuilder
     private $replaceRules = [];
     private $whereSearchSubstring;
     private $whereCondition;
+    private $orderSearchSubstring;
+    private $orderCondition;
 
     /**
      * SQLReplacer constructor.
@@ -52,6 +58,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function prepareOrderBy($searchSubstring, BaseOrderBy $orderBy): self
+    {
+        $this->orderSearchSubstring = $searchSubstring;
+        $this->orderCondition = $orderBy;
+        return $this;
+    }
+
     public function getQuery()
     {
         $this->getCombinedBindNames();
@@ -61,6 +74,14 @@ class QueryBuilder
                 $this->replaceRules[$this->whereSearchSubstring] = 'WHERE ' . $this->whereCondition->getSQL();
             } else {
                 $this->replaceRules[$this->whereSearchSubstring] = '';
+            }
+        }
+
+        if ($this->orderCondition instanceof BaseOrderBy) {
+            if ($this->orderCondition->getSQL()) {
+                $this->replaceRules[$this->orderSearchSubstring] = 'ORDER BY '.$this->orderCondition->getSQL();
+            } else {
+                $this->replaceRules[$this->orderSearchSubstring] = '';
             }
         }
 
