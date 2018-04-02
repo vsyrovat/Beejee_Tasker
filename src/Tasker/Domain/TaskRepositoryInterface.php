@@ -9,11 +9,12 @@ interface TaskRepositoryInterface
     public function add(Task $task): Task;
 
     /**
+     * @param string $sort
      * @param int $limit
      * @param int $offset
      * @return Task[]
      */
-    public function list(int $limit = null, int $offset = null): array;
+    public function list(string $sort = null, int $limit = null, int $offset = null): array;
 
     public function count(): int;
 

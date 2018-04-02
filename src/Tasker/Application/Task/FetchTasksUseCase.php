@@ -15,8 +15,13 @@ class FetchTasksUseCase
         $this->taskRepository = $taskRepository;
     }
 
-    public function run(int $limit = null, int $offset = null): array
+    public function run(string $sort = null, int $limit = null, int $offset = null): array
     {
-        return $this->taskRepository->list($limit, $offset);
+        if (!empty($sort) &&
+            !in_array($sort, ['name.asc', 'name.desc', 'email.asc', 'email.desc', 'done.first', 'undone.first'])) {
+            throw new \InvalidArgumentException('Unknown sort param: '.$sort);
+        }
+
+        return $this->taskRepository->list($sort, $limit, $offset);
     }
 }

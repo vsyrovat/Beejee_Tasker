@@ -3,10 +3,25 @@
 {% block h1 %}List of the tasks{% endblock %}
 
 {% block body %}
-    <div class="text-right">
-        {% include '@Pagination/paginator.twig' with {paginator: paginator} %}
+    <hr>
+    <div class="row">
+        <div class="col-6">
+            Sort by:
+            <select name="" id="" class="js-sort-by">
+                <option value="">- default -</option>
+                <option value="name.asc" {% if sort == 'name.asc' %}selected{% endif %}>Name ASC</option>
+                <option value="name.desc" {% if sort == 'name.desc' %}selected{% endif %}>Name DESC</option>
+                <option value="email.asc" {% if sort == 'email.asc' %}selected{% endif %}>Email ASC</option>
+                <option value="email.desc" {% if sort == 'email.desc' %}selected{% endif %}>Email DESC</option>
+                <option value="done.first" {% if sort == 'done.first' %}selected{% endif %}>Done first</option>
+                <option value="undone.first" {% if sort == 'undone.first' %}selected{% endif %}>Undone first</option>
+            </select>
+        </div>
+        <div class="col-6 text-right">
+            {% include '@Pagination/paginator.twig' with {paginator: paginator} %}
+        </div>
     </div>
-
+    <hr>
     <div class="row">
         {% for task in tasks %}
             <div class="col-12 col-lg-4">
@@ -27,4 +42,14 @@
     </div>
 
     <p><a href="{{ url('task.add') }}">Add Task</a></p>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        'use strict';
+
+        $('.js-sort-by').change(function(){
+            document.location.search = '?sort=' + $(this).val();
+        });
+    </script>
 {% endblock %}

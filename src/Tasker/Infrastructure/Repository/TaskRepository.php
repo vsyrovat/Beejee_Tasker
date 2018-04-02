@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tasker\Infrastructure\Repository;
 
+use Framework\PDO\Helpers\Order\OrderBy;
 use Framework\PDO\Helpers\QueryBuilder;
 use Tasker\Domain\Task;
 use Tasker\Domain\TaskNotFoundException;
@@ -11,11 +12,48 @@ use Tasker\Domain\TaskRepositoryInterface;
 
 class TaskRepository implements TaskRepositoryInterface
 {
+    const SORT_NAME_ASC = 'name.asc';
+    const SORT_NAME_DESC = 'name.desc';
+    const SORT_EMAIL_ASC = 'email.asc';
+    const SORT_EMAIL_DESC = 'email.desc';
+    const SORT_DONE_FIRST = 'done.first';
+    const SORT_UNDONE_FIRST = 'undone.first';
+
     private $pdo;
 
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    protected function prepareOrderBy(?string $sort): OrderBy
+    {
+        switch ($sort) {
+            case static::SORT_NAME_ASC:
+                return new OrderBy('username', 'asc');
+                break;
+            case static::SORT_NAME_DESC:
+                return new OrderBy('username', 'desc');
+                break;
+            case static::SORT_EMAIL_ASC:
+                return new OrderBy('email', 'asc');
+                break;
+            case static::SORT_EMAIL_DESC:
+                return new OrderBy('email', 'desc');
+                break;
+            case static::SORT_DONE_FIRST:
+                return new OrderBy('is_done', 'desc');
+                break;
+            case static::SORT_UNDONE_FIRST:
+                return new OrderBy('is_done', 'asc');
+                break;
+            case null:
+            case '':
+                return new OrderBy(null);
+                break;
+            default:
+                throw new \InvalidArgumentException('Unexpected sort mode: '.$sort);
+        }
     }
 
     public function add(Task $task): Task
@@ -45,10 +83,11 @@ VALUES
     /**
      * {@inheritdoc}
      */
-    public function list(int $limit = null, int $offset = null): array
+    public function list(string $sort = null, int $limit = null, int $offset = null): array
     {
-        $queryBuilder = new QueryBuilder("SELECT * FROM `tasks` ORDER BY `id` DESC {{LIMIT}}");
+        $queryBuilder = new QueryBuilder("SELECT * FROM `tasks` {{ORDERBY}} {{LIMIT}}");
         $queryBuilder->prepareLimit('{{LIMIT}}', $limit, $offset);
+        $queryBuilder->prepareOrderBy('{{ORDERBY}}', $this->prepareOrderBy($sort));
 
         /* @var $statement \Framework\PDO\PDOStatement */
         $statement = $this->pdo->prepare($queryBuilder->getQuery());
