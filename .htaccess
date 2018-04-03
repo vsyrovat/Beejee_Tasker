@@ -2,6 +2,7 @@ RewriteEngine on
 RewriteBase /
 
 RewriteCond %{REQUEST_URI} !^/web/
+RewriteCond %{REQUEST_URI} !^/dayside/
 
 # Rewrites all URLS [Replace "example" with the actual domain, without the TLD (.com, .net, .biz, etc)]
 #RewriteCond %{HTTP_HOST} ^(www\.)?example\.
