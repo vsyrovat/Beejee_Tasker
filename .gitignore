@@ -4,5 +4,6 @@
 /vendor/
 /tmp/
 /log/
-/web/img/
+/web/img/*
+!/web/img/.keep
 /app/config/db.php
