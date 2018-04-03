@@ -1,7 +1,7 @@
 <div>
     <p>{{ formData.userName }}</p>
     <p>{{ formData.email }}</p>
-    <p>{{ formData.text }}</p>
+    <p>{{ formData.text|nl2br }}</p>
     {% if dataUriImage %}
         <img src="{{ dataUriImage }}" alt="">
     {% endif %}

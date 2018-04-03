@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tasker\Infrastructure\Repository;
 
+use Framework\PDO\Helpers\Order\BaseOrderBy;
 use Framework\PDO\Helpers\Order\OrderBy;
+use Framework\PDO\Helpers\Order\OrderByChain;
 use Framework\PDO\Helpers\QueryBuilder;
 use Tasker\Domain\Task;
 use Tasker\Domain\TaskNotFoundException;
@@ -26,34 +28,39 @@ class TaskRepository implements TaskRepositoryInterface
         $this->pdo = $pdo;
     }
 
-    protected function prepareOrderBy(?string $sort): OrderBy
+    protected function prepareOrderBy(?string $sort): BaseOrderBy
     {
+        $result = new OrderByChain();
+
         switch ($sort) {
             case static::SORT_NAME_ASC:
-                return new OrderBy('username', 'asc');
+                $result->add(new OrderBy('username', 'asc'));
                 break;
             case static::SORT_NAME_DESC:
-                return new OrderBy('username', 'desc');
+                $result->add(new OrderBy('username', 'desc'));
                 break;
             case static::SORT_EMAIL_ASC:
-                return new OrderBy('email', 'asc');
+                $result->add(new OrderBy('email', 'asc'));
                 break;
             case static::SORT_EMAIL_DESC:
-                return new OrderBy('email', 'desc');
+                $result->add(new OrderBy('email', 'desc'));
                 break;
             case static::SORT_DONE_FIRST:
-                return new OrderBy('is_done', 'desc');
+                $result->add(new OrderBy('is_done', 'desc'));
                 break;
             case static::SORT_UNDONE_FIRST:
-                return new OrderBy('is_done', 'asc');
+                $result->add(new OrderBy('is_done', 'asc'));
                 break;
             case null:
             case '':
-                return new OrderBy(null);
                 break;
             default:
                 throw new \InvalidArgumentException('Unexpected sort mode: '.$sort);
         }
+
+        $result->add(new OrderBy('created_at', 'desc'));
+
+        return $result;
     }
 
     public function add(Task $task): Task
